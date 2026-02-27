@@ -1,0 +1,253 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+/* ── Font Faces ─────────────────────────────────────────────── */
+@font-face {
+  font-family: "Outfit";
+  src: url("/assets/fonts/Outfit.woff2") format("woff2");
+  font-weight: 100 900;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: "Sora";
+  src: url("/assets/fonts/Sora.woff2") format("woff2");
+  font-weight: 100 800;
+  font-display: swap;
+}
+
+/* ── Design Tokens ──────────────────────────────────────────── */
+@layer base {
+  :root {
+    --radius: 0.75rem;
+
+    /* Camera dark theme - deep blacks with amber accent */
+    --background: 0.08 0 0;
+    --foreground: 0.95 0 0;
+    --card: 0.12 0 0;
+    --card-foreground: 0.95 0 0;
+    --popover: 0.14 0 0;
+    --popover-foreground: 0.95 0 0;
+    --primary: 0.72 0.18 68;
+    --primary-foreground: 0.08 0 0;
+    --secondary: 0.18 0 0;
+    --secondary-foreground: 0.85 0 0;
+    --muted: 0.16 0 0;
+    --muted-foreground: 0.55 0 0;
+    --accent: 0.72 0.18 68;
+    --accent-foreground: 0.05 0 0;
+    --destructive: 0.60 0.22 25;
+    --destructive-foreground: 0.98 0 0;
+    --border: 0.22 0 0;
+    --input: 0.20 0 0;
+    --ring: 0.72 0.18 68;
+
+    /* Camera-specific tokens */
+    --amber: 0.72 0.18 68;
+    --amber-bright: 0.82 0.22 75;
+    --amber-dim: 0.55 0.14 65;
+    --surface-overlay: 0.10 0 0;
+    --glass: 0.15 0 0 / 80%;
+
+    --chart-1: 0.72 0.18 68;
+    --chart-2: 0.55 0.15 200;
+    --chart-3: 0.65 0.20 145;
+    --chart-4: 0.60 0.22 25;
+    --chart-5: 0.70 0.18 310;
+
+    --sidebar: 0.10 0 0;
+    --sidebar-foreground: 0.95 0 0;
+    --sidebar-primary: 0.72 0.18 68;
+    --sidebar-primary-foreground: 0.08 0 0;
+    --sidebar-accent: 0.18 0 0;
+    --sidebar-accent-foreground: 0.85 0 0;
+    --sidebar-border: 0.22 0 0;
+    --sidebar-ring: 0.72 0.18 68;
+  }
+
+  * {
+    @apply border-border;
+  }
+
+  html {
+    color-scheme: dark;
+  }
+
+  body {
+    @apply bg-background text-foreground;
+    font-family: "Outfit", sans-serif;
+    overflow: hidden;
+    overscroll-behavior: none;
+    height: 100dvh;
+    width: 100vw;
+  }
+
+  #root {
+    height: 100dvh;
+    width: 100vw;
+    overflow: hidden;
+  }
+}
+
+/* ── Camera-specific utilities ──────────────────────────────── */
+@layer utilities {
+  .camera-glass {
+    background: oklch(var(--glass));
+    backdrop-filter: blur(12px) saturate(1.4);
+    -webkit-backdrop-filter: blur(12px) saturate(1.4);
+    border: 1px solid oklch(0.30 0 0 / 50%);
+  }
+
+  .capture-ring {
+    box-shadow:
+      0 0 0 3px oklch(var(--amber)) ,
+      0 0 0 6px oklch(var(--amber) / 30%),
+      0 0 24px oklch(var(--amber) / 40%);
+  }
+
+  .capture-ring-active {
+    box-shadow:
+      0 0 0 3px oklch(var(--amber-bright)),
+      0 0 0 8px oklch(var(--amber-bright) / 50%),
+      0 0 40px oklch(var(--amber-bright) / 60%);
+  }
+
+  .text-amber {
+    color: oklch(var(--amber));
+  }
+
+  .bg-amber {
+    background-color: oklch(var(--amber));
+  }
+
+  .bg-amber-bright {
+    background-color: oklch(var(--amber-bright));
+  }
+
+  .border-amber {
+    border-color: oklch(var(--amber));
+  }
+
+  .scrollbar-hide {
+    scrollbar-width: none;
+    -ms-overflow-style: none;
+  }
+
+  .scrollbar-hide::-webkit-scrollbar {
+    display: none;
+  }
+
+  .safe-bottom {
+    padding-bottom: env(safe-area-inset-bottom, 0px);
+  }
+
+  .safe-top {
+    padding-top: env(safe-area-inset-top, 0px);
+  }
+}
+
+/* ── Animations ─────────────────────────────────────────────── */
+@keyframes shutter-flash {
+  0% { opacity: 0; }
+  10% { opacity: 1; }
+  100% { opacity: 0; }
+}
+
+@keyframes capture-pulse {
+  0%, 100% { box-shadow: 0 0 0 3px oklch(var(--amber)), 0 0 0 6px oklch(var(--amber) / 30%); }
+  50% { box-shadow: 0 0 0 3px oklch(var(--amber-bright)), 0 0 0 10px oklch(var(--amber-bright) / 40%); }
+}
+
+@keyframes recording-blink {
+  0%, 100% { opacity: 1; }
+  50% { opacity: 0.3; }
+}
+
+@keyframes slide-up {
+  from { transform: translateY(100%); opacity: 0; }
+  to { transform: translateY(0); opacity: 1; }
+}
+
+@keyframes fade-in {
+  from { opacity: 0; }
+  to { opacity: 1; }
+}
+
+@keyframes countdown-tick {
+  0% { transform: scale(1.4); opacity: 0; }
+  20% { transform: scale(1); opacity: 1; }
+  80% { transform: scale(1); opacity: 1; }
+  100% { transform: scale(0.8); opacity: 0; }
+}
+
+@keyframes zoom-in-photo {
+  from { transform: scale(1.1); opacity: 0; }
+  to { transform: scale(1); opacity: 1; }
+}
+
+.animate-shutter-flash {
+  animation: shutter-flash 0.35s ease-out forwards;
+}
+
+.animate-capture-pulse {
+  animation: capture-pulse 2s ease-in-out infinite;
+}
+
+.animate-recording-blink {
+  animation: recording-blink 1.2s ease-in-out infinite;
+}
+
+.animate-slide-up {
+  animation: slide-up 0.3s ease-out forwards;
+}
+
+.animate-fade-in {
+  animation: fade-in 0.2s ease-out forwards;
+}
+
+.animate-countdown-tick {
+  animation: countdown-tick 1s ease-in-out forwards;
+}
+
+.animate-zoom-in-photo {
+  animation: zoom-in-photo 0.4s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+}
+
+/* ── QR Scanner animations ──────────────────────────────────── */
+@keyframes qr-scan-line {
+  0% { top: 8%; }
+  50% { top: 88%; }
+  100% { top: 8%; }
+}
+
+@keyframes qr-corner-pulse {
+  0%, 100% { opacity: 1; }
+  50% { opacity: 0.5; }
+}
+
+@keyframes qr-result-pop {
+  0% { transform: scale(0.92) translateY(8px); opacity: 0; }
+  100% { transform: scale(1) translateY(0); opacity: 1; }
+}
+
+.animate-qr-scan-line {
+  animation: qr-scan-line 2.5s cubic-bezier(0.4, 0, 0.6, 1) infinite;
+}
+
+.animate-qr-corner-pulse {
+  animation: qr-corner-pulse 2s ease-in-out infinite;
+}
+
+.animate-qr-result-pop {
+  animation: qr-result-pop 0.3s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+}
+
+/* Hide scrollbar but allow scrolling */
+.no-scrollbar::-webkit-scrollbar {
+  display: none;
+}
+.no-scrollbar {
+  -ms-overflow-style: none;
+  scrollbar-width: none;
+}
